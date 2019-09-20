@@ -2,7 +2,7 @@
 # Generates this week's newsletter
 # Use:
 # $ ruby newsletter.rb
-
+#submit to github
 #########################
 # Data for the newsletter
 #########################
