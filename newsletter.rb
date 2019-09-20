@@ -2,7 +2,7 @@
 # Generates this week's newsletter
 # Use:
 # $ ruby newsletter.rb
-#submit to github
+
 #########################
 # Data for the newsletter
 #########################
@@ -23,7 +23,7 @@ ARTICLES = [
   {"author": "Dr. Crystle Kovacek Denesik", "title": "Legal", "text": "Most programs are not write-once. They are reworked and rewritten again and again in their lived. Bugs must be debugged. Changing requirements and the need for increased functionality mean the program itself may be modified on an ongoing basis. During this process, human beings must be able to read and understand the original code. It is therefore more important by far for humans to be able to understand the program than it is for the computer."},
   {"author": "Alfred Jast Hermann", "title": "Real-Estate", "text": "I didn't work hard to make Ruby perfect for everyone, because you feel differently from me. No language can be perfect for everyone. I tried to make Ruby perfect for me, but maybe it's not perfect for you. The perfect language for Guido van Rossum is probably Python."},
   {"author": "Michale Bruen Boehm", "title": "Consulting", "text": "Everyone has an individual background. Someone may come from Python, someone else may come from Perl, and they may be surprised by different aspects of the language. Then they come up to me and say, 'I was surprised by this feature of the language, so therefore Ruby violates the principle of least surprise.' Wait. Wait. The principle of least surprise is not for you only."},
-  {"author: "Tony Keeling Cartwright", "title": "Design", "text": "Often people, especially computer engineers, focus on the machines. But in fact we need to focus on humans, on how humans care about doing programming or operating the application of the machines."},
+  {"author": "Tony Keeling Cartwright", "title": "Design", "text": "Often people, especially computer engineers, focus on the machines. But in fact we need to focus on humans, on how humans care about doing programming or operating the application of the machines."},
 ]
 
 #########################
@@ -31,13 +31,20 @@ ARTICLES = [
 #########################
 
 def calculate_recipients
-  # TODO (Step 3) - Fix, not working
+  x = 0
   SUBSCRIBERS.each do |email|
-    UNSUBSCRIBED.include?(email)
+    if UNSUBSCRIBED.include?(email)
+      SUBSCRIBERS.delete_at(x)
+      x += 1
+    else
+      x += 1
+    end   
+    
   end
 end
 
 def first_n_articles(number_of_articles)
+
   ARTICLES.first(number_of_articles)
 end
 
@@ -54,16 +61,21 @@ def print_subject
 end
 
 def print_one_article(article)
-  # TODO (Step 4) - format article with title, byline, and text
-  puts "TITLE"
-  puts "by: AUTHOR"
-  puts "TEXT"
-  puts ""
+   
+   puts "#{article[:title]}"
+   puts "by: #{article[:author]}"
+   puts "#{article[:text]}"
+   puts ""
+  
 end
 
 def print_many_articles(articles)
-  # TODO (Step 5) - should print all the articles, not just the first one
-  print_one_article(articles.first)
+  x = 0
+  
+  while x < articles.length
+    print_one_article(articles[x])
+    x += 1
+  end
 end
 
 def print_newsletter(number)
@@ -75,10 +87,10 @@ def print_newsletter(number)
   print_recipients
   puts "Body:"
   puts "#{format_campus_location(CAMPUS)} Newsletter - #{format_week}"
-  articles = first_n_articles(number_of_articles)
+  articles = first_n_articles(number)
   print_many_articles(articles)
   puts format_footer(CAMPUS)
-  end
+  
 end
 
 #########################
@@ -87,7 +99,7 @@ end
 
 def format_campus_location(campus)
   # TODO (Step 2) - Fix, not showing name.
-  "Flatiron #{campus["name"]}"
+  "Flatiron #{CAMPUS[:name]}"
 end
 
 def format_week
@@ -103,13 +115,17 @@ end
 #########################
 
 def generate_newsletter(input)
-  if input == nil
-    # if there's no input number specified, print just the first 3 articles
+
+  if input == nil 
     print_newsletter(3)
+  elsif input.to_i == 0 || !/\A\d+\z/.match(input)
+    puts "Input should be a number more than 0"
+  elsif input.to_i > ARTICLES.length
+    print_newsletter(ARTICLES.length)
   else
     # if a number of articles is specified, print that many articles
     # TODO (Step 6) - Fix, not working 
-    number_of_articles = input
+    number_of_articles = input.to_i
     print_newsletter(number_of_articles)
   end
 end
